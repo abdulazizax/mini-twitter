@@ -1,3 +1,9 @@
 [submodule "user-service/mini-twitter-protos"]
 	path = user-service/mini-twitter-protos
 	url = git@github.com:abdulazizax/mini-twitter-protos.git
+[submodule "tweet-service/mini-twitter-protos"]
+	path = tweet-service/mini-twitter-protos
+	url = git@github.com:abdulazizax/mini-twitter-protos.git
+[submodule "api-service/mini-twitter-protos"]
+	path = api-service/mini-twitter-protos
+	url = git@github.com:abdulazizax/mini-twitter-protos.git

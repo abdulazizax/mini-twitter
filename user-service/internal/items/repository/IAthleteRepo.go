@@ -34,7 +34,7 @@ type IAuthRepo interface {
 	// 12
 	GetUserByUsername(ctx context.Context, in *pb.GetUserByUsernameRequest) (*pb.GetUserByUsernameResponse, error)
 	// 13
-	UpdatePassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.RawResponse, error)
+	UpdateUserPassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.RawResponse, error)
 	// 14
 	SendVerificationCode(ctx context.Context, req *pb.SendVerificationCodeRequest) (*pb.RawResponse, error)
 }

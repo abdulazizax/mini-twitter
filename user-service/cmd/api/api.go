@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/abdulazizax/mini-twitter/user-service/internal/items/msgbroker"
+	"github.com/abdulazizax/mini-twitter/user-service/internal/items/redisservice"
 	"github.com/abdulazizax/mini-twitter/user-service/internal/items/service"
 	"github.com/abdulazizax/mini-twitter/user-service/internal/items/storage"
 	"github.com/abdulazizax/mini-twitter/user-service/internal/pkg/config"
@@ -28,6 +29,7 @@ func Run(config *config.Config, logger *slog.Logger) error {
 	sqrl := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 
 	service := service.New(storage.New(
+		redisservice.New(redisservice.NewRedisClient(config), logger),
 		db,
 		sqrl,
 		config,
@@ -49,7 +51,7 @@ func Run(config *config.Config, logger *slog.Logger) error {
 	}
 
 	for _, consumer := range consumers {
-		c, err := msgbroker.NewConsumer(config.Kafka, "todolist", consumer.topic, logger, service, &wg)
+		c, err := msgbroker.NewConsumer(config.Kafka, consumer.topic, logger, service, &wg)
 		if err != nil {
 			logger.Error("Error creating "+consumer.topic+" consumer", slog.String("err", err.Error()))
 			continue

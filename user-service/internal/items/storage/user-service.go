@@ -27,8 +27,9 @@ type Storage struct {
 	logger       *slog.Logger
 }
 
-func New(postgres *sql.DB, queryBuilder sq.StatementBuilderType, cfg *config.Config, logger *slog.Logger) repository.IAuthRepo {
+func New(redisService *redisservice.RedisService, postgres *sql.DB, queryBuilder sq.StatementBuilderType, cfg *config.Config, logger *slog.Logger) repository.IAuthRepo {
 	return &Storage{
+		redisService: redisService,
 		postgres:     postgres,
 		queryBuilder: queryBuilder,
 		cfg:          cfg,
@@ -42,8 +43,8 @@ func (s *Storage) RegisterUser(ctx context.Context, in *pb.RegisterUserRequest) 
 
 	password_hash, err := hashPassword(in.Password)
 	if err != nil {
-		s.logger.Error("Error while hashing password:", slog.String("err:", err.Error()))
-		return nil, err
+		s.logger.Error("Failed to hash password", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 
 	query, args, err := s.queryBuilder.Insert("users").
@@ -57,19 +58,20 @@ func (s *Storage) RegisterUser(ctx context.Context, in *pb.RegisterUserRequest) 
 		).Values(
 		id,
 		in.Email,
+		in.Username,
 		password_hash,
 		created_at,
 		created_at,
 	).ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = s.postgres.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return &pb.RegisterUserResponse{
@@ -80,47 +82,48 @@ func (s *Storage) RegisterUser(ctx context.Context, in *pb.RegisterUserRequest) 
 func (s *Storage) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	tx, err := s.postgres.BeginTx(ctx, nil)
 	if err != nil {
-		s.logger.Error("Error while starting a transaction")
-		return nil, err
+		s.logger.Error("Failed to start transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to start transaction: %w", err)
 	}
 	defer tx.Rollback()
 
 	query, args, err := s.queryBuilder.Select(
 		"id",
 		"role",
+		"username",
 		"password_hash").
 		From("users").
 		Where(sq.Eq{"email": in.Email}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
-	var id, role, hashedPassword string
+	var id, role, username, hashedPassword string
 
-	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&id, &role, &hashedPassword)
+	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&id, &role, &username, &hashedPassword)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	_, err = checkPassword(hashedPassword, in.Password)
 	if err != nil {
-		s.logger.Error("Error while checking password")
-		return nil, err
+		s.logger.Error("Failed to check password", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to check password: %w", err)
 	}
 
-	accessToken, err := jwttokens.GenerateAccessToken(id, in.Email, role, s.cfg.JWT.SecretKey)
+	accessToken, err := jwttokens.GenerateAccessToken(id, username, in.Email, role, s.cfg.JWT.SecretKey)
 	if err != nil {
-		s.logger.Error("Error while generating access token")
-		return nil, err
+		s.logger.Error("Failed to generate access token", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to generate access token: %w", err)
 	}
 
-	refreshToken, err := jwttokens.GenerateRefreshToken(id, in.Email, role, s.cfg.JWT.SecretKey)
+	refreshToken, err := jwttokens.GenerateRefreshToken(id, username, in.Email, role, s.cfg.JWT.SecretKey)
 	if err != nil {
-		s.logger.Error("Error while generating refresh token")
-		return nil, err
+		s.logger.Error("Failed to generate refresh token", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to generate refresh token: %w", err)
 	}
 
 	query, args, err = s.queryBuilder.Update("users").
@@ -129,19 +132,19 @@ func (s *Storage) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResp
 		Where(sq.Eq{"id": id}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = tx.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.ErrorContext(ctx, "error while committing transaction", slog.String("error", err.Error()))
-		return nil, err
+		s.logger.Error("Failed to commit transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return &pb.LoginResponse{
@@ -153,8 +156,8 @@ func (s *Storage) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResp
 func (s *Storage) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	tx, err := s.postgres.BeginTx(ctx, nil)
 	if err != nil {
-		s.logger.Error("Error while starting a transaction")
-		return nil, err
+		s.logger.Error("Failed to start transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to start transaction: %w", err)
 	}
 	defer tx.Rollback()
 
@@ -164,19 +167,19 @@ func (s *Storage) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutR
 		Where(sq.Eq{"id": in.UserId}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = tx.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.ErrorContext(ctx, "error while committing transaction", slog.String("error", err.Error()))
-		return nil, err
+		s.logger.Error("Failed to commit transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return &pb.LogoutResponse{
@@ -199,8 +202,8 @@ func (s *Storage) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.UserR
 		Where(sq.Eq{"id": in.UserId}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	var email, username, first_name, last_name, phone_number, bio, profile_picture sql.NullString
@@ -208,8 +211,8 @@ func (s *Storage) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.UserR
 
 	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&email, &username, &first_name, &last_name, &phone_number, &bio, &profile_picture, &created_at, &updated_at)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return &pb.UserResponse{
@@ -243,6 +246,10 @@ func (s *Storage) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb
 	}
 	if in.Username != "" {
 		queryBuilder = queryBuilder.Set("username", in.Username)
+		fieldsUpdated = true
+	}
+	if in.PhoneNumber != "" {
+		queryBuilder = queryBuilder.Set("phone_number", in.Username)
 		fieldsUpdated = true
 	}
 	if in.FirstName != "" {
@@ -279,15 +286,15 @@ func (s *Storage) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb
 	// SQL so'rovini yaratamiz
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
-		s.logger.Error("Error while building update query", "error", err)
-		return nil, err
+		s.logger.Error("Failed to build update query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build update query: %w", err)
 	}
 
 	// SQL so'rovini bajarish
 	_, err = s.postgres.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing update query", "error", err)
-		return nil, err
+		s.logger.Error("Failed to execute update query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute update query: %w", err)
 	}
 
 	// Yangilangan foydalanuvchi ma'lumotlarini qaytarish
@@ -296,6 +303,7 @@ func (s *Storage) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb
 			Id:                in.UserId,
 			Email:             in.Email,
 			Username:          in.Username,
+			PhoneNumber:       in.PhoneNumber,
 			FirstName:         in.FirstName,
 			LastName:          in.LastName,
 			Bio:               in.Bio,
@@ -313,14 +321,14 @@ func (s *Storage) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest) (*pb
 		Where(sq.Eq{"id": in.UserId}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = s.postgres.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return &pb.DeleteUserResponse{
@@ -334,16 +342,16 @@ func (s *Storage) GetUserByEmail(ctx context.Context, in *pb.GetUserByEmailReque
 		Where(sq.Eq{"email": in.Email}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	var id string
 
 	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&id)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return &pb.GetUserByEmailResponse{
@@ -357,16 +365,16 @@ func (s *Storage) GetUserByUsername(ctx context.Context, in *pb.GetUserByUsernam
 		Where(sq.Eq{"username": in.Username}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	var id string
 
 	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&id)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return &pb.GetUserByUsernameResponse{
@@ -374,38 +382,44 @@ func (s *Storage) GetUserByUsername(ctx context.Context, in *pb.GetUserByUsernam
 	}, nil
 }
 
-func (s *Storage) UpdatePassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.RawResponse, error) {
+func (s *Storage) UpdateUserPassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.RawResponse, error) {
 	err := s.verifyEmail(context.Background(), req.Email, int(req.VerificationCode))
 	if err != nil {
-		s.logger.Error("Error while verifying email")
-		return nil, err
+		s.logger.Error("Failed to verify email", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to verify email: %w", err)
 	}
 
 	tx, err := s.postgres.BeginTx(ctx, nil)
 	if err != nil {
-		s.logger.Error("Error while starting a transaction")
-		return nil, err
+		s.logger.Error("Failed to start transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to start transaction: %w", err)
 	}
 	defer tx.Rollback()
 
+	password_hash, err := hashPassword(req.NewPassword)
+	if err != nil {
+		s.logger.Error("Failed to hash password", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to hash password: %w", err)
+	}
+
 	query, args, err := s.queryBuilder.Update("users").
-		Set("password_hash", req.NewPassword).
-		Where(sq.Eq{"id": req.UserId}).
+		Set("password_hash", password_hash).
+		Where(sq.Eq{"email": req.Email}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = tx.ExecContext(ctx, query, args...)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.ErrorContext(ctx, "error while committing transaction", slog.String("error", err.Error()))
-		return nil, err
+		s.logger.Error("Failed to commit transaction", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return &pb.RawResponse{
@@ -419,25 +433,25 @@ func (s *Storage) SendVerificationCode(ctx context.Context, req *pb.SendVerifica
 		Where(sq.Eq{"email": req.Email}).
 		ToSql()
 	if err != nil {
-		s.logger.Error("Error while building a query")
-		return nil, err
+		s.logger.Error("Failed to build query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	var email string
 	err = s.postgres.QueryRowContext(ctx, query, args...).Scan(&email)
 	if err != nil {
-		s.logger.Error("Error while executing a query")
-		return nil, err
+		s.logger.Error("Failed to execute query", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	if email != req.Email {
-		s.logger.Info("Email not found")
-		return nil, fmt.Errorf("email not found")
+		s.logger.Info("Email not found", slog.String("email", req.Email))
+		return nil, fmt.Errorf("email not found: %s", req.Email)
 	}
 
 	if err := s.sendVerificationCode(context.Background(), req.Email); err != nil {
-		s.logger.Error("Error while sending verification code")
-		return nil, err
+		s.logger.Error("Failed to send verification code", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to send verification code: %w", err)
 	}
 
 	return &pb.RawResponse{
@@ -448,12 +462,15 @@ func (s *Storage) SendVerificationCode(ctx context.Context, req *pb.SendVerifica
 func hashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to hash password: %w", err)
 	}
 	return string(hashedPassword), nil
 }
 
 func checkPassword(hashedPassword, password string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	return err == nil, err
+	if err != nil {
+		return false, fmt.Errorf("failed to compare password: %w", err)
+	}
+	return true, nil
 }

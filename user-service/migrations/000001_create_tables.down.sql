@@ -1,0 +1,10 @@
+DROP TABLE if EXISTS Followers;
+
+DROP TABLE if EXISTS Likes;
+
+DROP TABLE if EXISTS Comments;
+
+DROP TABLE if EXISTS Tweets;
+
+DROP TABLE IF EXISTS Users;
+

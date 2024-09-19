@@ -97,7 +97,7 @@ func (s *Service) GetUserByUsername(ctx context.Context, in *pb.GetUserByUsernam
 // 13 ------
 func (s *Service) UpdateUserPassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.RawResponse, error) {
 	s.logger.Info("UpdatePasswordService function was invoked", slog.String("request", req.String()))
-	return s.storage.UpdatePassword(ctx, req)
+	return s.storage.UpdateUserPassword(ctx, req)
 }
 
 // 14 ------

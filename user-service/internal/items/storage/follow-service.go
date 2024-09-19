@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -172,6 +173,8 @@ func (s *Storage) GetFollowers(ctx context.Context, in *pb.GetFollowersRequest) 
 		return nil, err
 	}
 
+	log.Println(query)
+
 	rows, err := s.postgres.QueryContext(ctx, query, args...)
 	if err != nil {
 		s.logger.Error("Error while executing the query", "error", err)
@@ -183,6 +186,7 @@ func (s *Storage) GetFollowers(ctx context.Context, in *pb.GetFollowersRequest) 
 	for rows.Next() {
 		var user pb.User
 		var createdAt, updatedAt time.Time
+		var phoneNumber sql.NullString // Using sql.NullString to handle NULL values
 
 		err := rows.Scan(
 			&user.Id,
@@ -190,7 +194,7 @@ func (s *Storage) GetFollowers(ctx context.Context, in *pb.GetFollowersRequest) 
 			&user.Username,
 			&user.FirstName,
 			&user.LastName,
-			&user.PhoneNumber,
+			&phoneNumber, // Scanning phone_number into sql.NullString
 			&user.Bio,
 			&user.ProfilePictureUrl,
 			&createdAt,
@@ -199,6 +203,13 @@ func (s *Storage) GetFollowers(ctx context.Context, in *pb.GetFollowersRequest) 
 		if err != nil {
 			s.logger.Error("Error while scanning row", "error", err)
 			return nil, err
+		}
+
+		// Set PhoneNumber to empty string if it's NULL
+		if phoneNumber.Valid {
+			user.PhoneNumber = phoneNumber.String
+		} else {
+			user.PhoneNumber = ""
 		}
 
 		user.CreatedAt = timestamppb.New(createdAt)
@@ -248,6 +259,7 @@ func (s *Storage) GetFollowing(ctx context.Context, in *pb.GetFollowingRequest) 
 	for rows.Next() {
 		var user pb.User
 		var createdAt, updatedAt time.Time
+		var phoneNumber sql.NullString // Using sql.NullString to handle NULL values
 
 		err := rows.Scan(
 			&user.Id,
@@ -255,7 +267,7 @@ func (s *Storage) GetFollowing(ctx context.Context, in *pb.GetFollowingRequest) 
 			&user.Username,
 			&user.FirstName,
 			&user.LastName,
-			&user.PhoneNumber,
+			&phoneNumber, // Scanning phone_number into sql.NullString
 			&user.Bio,
 			&user.ProfilePictureUrl,
 			&createdAt,
@@ -264,6 +276,13 @@ func (s *Storage) GetFollowing(ctx context.Context, in *pb.GetFollowingRequest) 
 		if err != nil {
 			s.logger.Error("Error while scanning row", "error", err)
 			return nil, err
+		}
+
+		// Set PhoneNumber to empty string if it's NULL
+		if phoneNumber.Valid {
+			user.PhoneNumber = phoneNumber.String
+		} else {
+			user.PhoneNumber = ""
 		}
 
 		user.CreatedAt = timestamppb.New(createdAt)

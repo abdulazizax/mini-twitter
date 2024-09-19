@@ -9,17 +9,19 @@ import (
 type Claims struct {
 	UserID   string `json:"user_id"`
 	Username string `json:"username"`
+	Email    string `json:"email"`
 	Role     string `json:"role"`
 	jwt.StandardClaims
 }
 
-func GenerateAccessToken(userID, username, role, jwtKey string) (string, error) {
+func GenerateAccessToken(userID, username, email, role, jwtKey string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &Claims{
 		UserID:   userID,
 		Username: username,
 		Role:     role,
+		Email:    email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -36,13 +38,14 @@ func GenerateAccessToken(userID, username, role, jwtKey string) (string, error) 
 	return tokenString, nil
 }
 
-func GenerateRefreshToken(userID, username, role, jwtKey string) (string, error) {
+func GenerateRefreshToken(userID, username, email, role, jwtKey string) (string, error) {
 	expirationTime := time.Now().Add(30 * 24 * time.Hour)
 
 	claims := &Claims{
 		UserID:   userID,
 		Username: username,
 		Role:     role,
+		Email:    email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

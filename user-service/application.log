@@ -1,22 +1,2 @@
-{"time":"2024-09-17T19:07:36.286478957+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.286564118+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.286928799+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.286978604+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.287238574+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.287310283+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.287569345+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.287626639+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.287899353+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.287948585+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.288179499+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.288230625+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:36.288480897+05:00","level":"INFO","msg":"Server has started running","port":":8081"}
-{"time":"2024-09-17T19:07:36.28847432+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)"}
-{"time":"2024-09-17T19:07:36.288512383+05:00","level":"ERROR","msg":"Error while consuming message","error":"1/1 brokers are down"}
-{"time":"2024-09-17T19:07:37.28589719+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.286206336+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.286364846+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.286652772+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.287015661+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.28732923+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
-{"time":"2024-09-17T19:07:37.287591303+05:00","level":"ERROR","msg":"Error while consuming message","error":"localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)"}
+{"time":"2024-09-19T22:08:32.059012704+05:00","level":"INFO","msg":"Server has started running","port":":8081"}
+{"time":"2024-09-19T22:08:32.065829406+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.verifycode.sended: Broker: Unknown topic or partition"}

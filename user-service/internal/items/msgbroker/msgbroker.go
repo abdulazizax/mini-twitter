@@ -5,15 +5,14 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/abdulazizax/mini-twitter/user-service/internal/items/service"
-
 	pb "github.com/abdulazizax/mini-twitter/user-service/genproto/user"
-
+	"github.com/abdulazizax/mini-twitter/user-service/internal/items/service"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
+// Consumer structure
 type Consumer struct {
 	service  *service.Service
 	consumer *kafka.Consumer
@@ -21,11 +20,12 @@ type Consumer struct {
 	wg       *sync.WaitGroup
 }
 
-func NewConsumer(brokers, groupID, topic string, logger *slog.Logger, service *service.Service, wg *sync.WaitGroup) (*Consumer, error) {
+// NewConsumer creates a new consumer
+func NewConsumer(brokers, topic string, logger *slog.Logger, service *service.Service, wg *sync.WaitGroup) (*Consumer, error) {
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": brokers,
-		"group.id":          groupID,
-		"auto.offset.reset": "earliest",
+		"auto.offset.reset": "earliest",           // Start from the earliest message
+		"group.id":          "user-service-group", // Consumer group ID
 	})
 	if err != nil {
 		return nil, err
@@ -44,6 +44,7 @@ func NewConsumer(brokers, groupID, topic string, logger *slog.Logger, service *s
 	}, nil
 }
 
+// Start starts the consumer to process messages
 func (c *Consumer) Start(ctx context.Context) {
 	c.wg.Add(1)
 	defer c.wg.Done()
@@ -93,6 +94,8 @@ func (c *Consumer) Start(ctx context.Context) {
 				var req pb.SendVerificationCodeRequest
 				errUnmarshal = protojson.Unmarshal(msg.Value, &req)
 				response, err = c.service.SendVerificationCode(ctx, &req)
+			default:
+				c.logger.Warn("Unknown topic", "topic", *msg.TopicPartition.Topic)
 			}
 
 			if errUnmarshal != nil {
@@ -101,7 +104,7 @@ func (c *Consumer) Start(ctx context.Context) {
 			}
 
 			if err != nil {
-				c.logger.Error("Failed in topic %s: %s", *msg.TopicPartition.Topic, err.Error())
+				c.logger.Error("Failed processing message", "topic", *msg.TopicPartition.Topic, "error", err.Error())
 				continue
 			}
 

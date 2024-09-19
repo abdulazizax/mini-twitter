@@ -47,7 +47,7 @@ func (c *Config) Load() error {
 		return err
 	}
 
-	c.Server.Port = ":" + os.Getenv("SERVER_PORT")
+	c.Server.Port = os.Getenv("SERVER_PORT")
 	c.Database.Host = os.Getenv("DB_HOST")
 	c.Database.Port = os.Getenv("DB_PORT")
 	c.Database.User = os.Getenv("DB_USER")

@@ -133,5 +133,5 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 	}
 
 	// Start the server
-	return router.Run("localhost" + config.Server.ServerPort)
+	return router.Run(config.Server.ServerPort)
 }

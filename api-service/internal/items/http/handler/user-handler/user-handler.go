@@ -24,7 +24,7 @@ type UserHandler struct {
 
 func NewUserHandler(logger *slog.Logger, config *config.Config, producer *msgbroker.Producer, minio *minio.Client) *UserHandler {
 	return &UserHandler{
-		user:     pb.NewUserServiceClient(connect("localhost", config.Server.UserPort)),
+		user:     pb.NewUserServiceClient(connect(config.Server.UserPort)),
 		logger:   logger,
 		config:   config,
 		producer: producer,
@@ -32,9 +32,8 @@ func NewUserHandler(logger *slog.Logger, config *config.Config, producer *msgbro
 	}
 }
 
-func connect(host, port string) *grpc.ClientConn {
-	address := host + port
-	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func connect(port string) *grpc.ClientConn {
+	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -11,6 +11,7 @@ type (
 		Server ServerConfig
 		JWT    JWTConfig
 		Kafka  KafkaConfig
+		Minio  string
 	}
 	JWTConfig struct {
 		SecretKey string
@@ -30,11 +31,12 @@ func (c *Config) Load() error {
 		return err
 	}
 
-	c.Server.ServerPort = ":" + os.Getenv("SERVER_PORT")
-	c.Server.UserPort = ":" + os.Getenv("USER_PORT")
-	c.Server.TwitterPort = ":" + os.Getenv("TWITTER_PORT")
+	c.Server.ServerPort = os.Getenv("SERVER_PORT")
+	c.Server.UserPort = os.Getenv("USER_PORT")
+	c.Server.TwitterPort = os.Getenv("TWITTER_PORT")
 	c.JWT.SecretKey = os.Getenv("JWT_SECRET_KEY")
 	c.Kafka.Brokers = os.Getenv("KAFKA_BROKER_URI")
+	c.Minio = os.Getenv("MINIO_URI")
 
 	return nil
 }

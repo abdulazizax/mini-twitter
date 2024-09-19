@@ -23,9 +23,9 @@ type TwetterClientConn struct {
 
 func NewTwetterClientConn(config *config.Config) *TwetterClientConn {
 	return &TwetterClientConn{
-		TweetClient:   tweet.NewTweetServiceClient(connect("localhost", config.Server.TwitterPort)),
-		CommentClient: comment.NewCommentServiceClient(connect("localhost", config.Server.TwitterPort)),
-		LikeClient:    like.NewLikeServiceClient(connect("localhost", config.Server.TwitterPort)),
+		TweetClient:   tweet.NewTweetServiceClient(connect(config.Server.TwitterPort)),
+		CommentClient: comment.NewCommentServiceClient(connect(config.Server.TwitterPort)),
+		LikeClient:    like.NewLikeServiceClient(connect(config.Server.TwitterPort)),
 	}
 }
 
@@ -45,9 +45,8 @@ func NewTwitterHandler(logger *slog.Logger, config *config.Config, producer *msg
 	}
 }
 
-func connect(host, port string) *grpc.ClientConn {
-	address := host + port
-	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func connect(port string) *grpc.ClientConn {
+	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}

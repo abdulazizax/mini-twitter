@@ -83,7 +83,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	minio, err := minio.New("localhost:9000", &minio.Options{
+	minio, err := minio.New(config.Minio, &minio.Options{
 		Creds:  credentials.NewStaticV4("minioadmin", "minioadmin", ""),
 		Secure: false,
 	})

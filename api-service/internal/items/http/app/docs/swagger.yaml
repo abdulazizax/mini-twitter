@@ -1,0 +1,1213 @@
+basePath: /
+definitions:
+  gin.H:
+    additionalProperties: {}
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_comment.Comment:
+    properties:
+      comment_serial:
+        description: Serial number of the comment
+        type: integer
+      content:
+        description: Comment content
+        type: string
+      created_at:
+        allOf:
+        - $ref: '#/definitions/timestamppb.Timestamp'
+        description: Timestamp when the comment was created
+      id:
+        description: Comment ID
+        type: string
+      tweet_id:
+        description: Tweet ID that this comment belongs to
+        type: string
+      updated_at:
+        allOf:
+        - $ref: '#/definitions/timestamppb.Timestamp'
+        description: Timestamp when the comment was last updated
+      username:
+        description: Username of the comment's creator
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_comment.GetCommentsForTweetResponse:
+    properties:
+      comments:
+        description: List of comments for the tweet
+        items:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_comment.Comment'
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_like.GetLikesResponse:
+    properties:
+      likes:
+        description: List of  likes
+        items:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_like.LikeInfo'
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_like.LikeInfo:
+    properties:
+      liked_at:
+        allOf:
+        - $ref: '#/definitions/timestamppb.Timestamp'
+        description: Timestamp when the like was added
+      username:
+        description: username of the user who liked
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.GetAllTweetsResponse:
+    properties:
+      tweets:
+        items:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Tweet'
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.GetTweetResponse:
+    properties:
+      tweet:
+        $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Tweet'
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Id:
+    properties:
+      tweet_serial:
+        type: integer
+      username:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Tweet:
+    properties:
+      comments_count:
+        type: integer
+      content:
+        type: string
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      id:
+        type: string
+      media:
+        items:
+          type: string
+        type: array
+      repost_count:
+        type: integer
+      shares_count:
+        type: integer
+      tweet_serial:
+        type: integer
+      updated_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      username:
+        type: string
+      views_count:
+        type: integer
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.GetFollowersResponse:
+    properties:
+      followers:
+        items:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.User'
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.GetFollowingResponse:
+    properties:
+      following:
+        items:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.User'
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.RawResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.RegisterUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.SendVerificationCodeRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.UpdateUserPasswordRequest:
+    properties:
+      email:
+        type: string
+      new_password:
+        type: string
+      verification_code:
+        type: integer
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_genproto_user.User:
+    properties:
+      bio:
+        type: string
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      profile_picture_url:
+        type: string
+      updated_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      username:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.CreateCommentRequest:
+    properties:
+      content:
+        type: string
+      tweet_id:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.CreateTweetRequest:
+    properties:
+      content:
+        type: string
+      media:
+        items:
+          type: string
+        type: array
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.DeleteCommentRequest:
+    properties:
+      comment_id:
+        type: string
+      tweet_id:
+        type: string
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.UpdateTweetRequest:
+    properties:
+      content:
+        type: string
+      media:
+        items:
+          type: string
+        type: array
+      tweet_serial:
+        type: integer
+    type: object
+  github_com_abdulazizax_mini-twitter_api-service_internal_models_user-handler.UpdateUserRequest:
+    properties:
+      bio:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      profile_picture_url:
+        type: string
+    type: object
+  timestamppb.Timestamp:
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive.
+        type: integer
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API Endpoints for MiniTwitter
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: '# MiniTwitter'
+  version: 1.03.67.83.145
+paths:
+  /auth/send-verification-email:
+    post:
+      consumes:
+      - application/json
+      description: Send a verification code to the user's email
+      parameters:
+      - description: Send verification code request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.SendVerificationCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.RawResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Send verification code
+      tags:
+      - Auth
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return login information
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: User login
+      tags:
+      - Auth
+  /auth/sign-out:
+    post:
+      description: Log out the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: User logout
+      tags:
+      - Auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided information
+      parameters:
+      - description: User registration information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Register a new user
+      tags:
+      - Auth
+  /auth/update-password:
+    post:
+      consumes:
+      - application/json
+      description: Update the user's password
+      parameters:
+      - description: Update user password request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.UpdateUserPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update user password
+      tags:
+      - Auth
+  /user:
+    get:
+      description: Get the information of the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get user information
+      tags:
+      - Users
+    post:
+      description: Delete the authenticated user's account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Delete user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update the information of the authenticated user
+      parameters:
+      - description: User update information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_internal_models_user-handler.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Update user information
+      tags:
+      - Users
+  /user/follow/{user_id}:
+    post:
+      consumes:
+      - application/json
+      description: Follow a user by their user ID
+      parameters:
+      - description: User ID to follow
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Follow a user
+      tags:
+      - Users
+  /user/followers:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of followers for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.GetFollowersResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get followers
+      tags:
+      - Users
+  /user/following:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of users the authenticated user is following
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_user.GetFollowingResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get following
+      tags:
+      - Users
+  /user/tweet:
+    get:
+      description: Get all tweets for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.GetAllTweetsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get all tweets for a user
+      tags:
+      - Tweets
+    post:
+      consumes:
+      - application/json
+      description: Create a new tweet for the authenticated user
+      parameters:
+      - description: Tweet details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.CreateTweetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Create a new tweet
+      tags:
+      - Tweets
+    put:
+      consumes:
+      - application/json
+      description: Update a tweet for the authenticated user
+      parameters:
+      - description: Updated tweet details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.UpdateTweetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Update a tweet
+      tags:
+      - Tweets
+  /user/tweet/{tweet_serial}:
+    get:
+      description: Get a specific tweet by username and tweet serial
+      parameters:
+      - description: Tweet serial number
+        in: path
+        name: tweet_serial
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.GetTweetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get a specific tweet
+      tags:
+      - Tweets
+  /user/tweet/{tweet_serial}/delete:
+    post:
+      description: Delete a tweet for the authenticated user
+      parameters:
+      - description: Tweet serial number
+        in: path
+        name: tweet_serial
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Delete a tweet
+      tags:
+      - Tweets
+  /user/tweet/comment:
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment for a tweet
+      parameters:
+      - description: Comment creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Create a new comment
+      tags:
+      - Comments
+  /user/tweet/comment/{tweet_id}:
+    get:
+      description: Retrieve all comments for a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: tweet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_comment.GetCommentsForTweetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get comments for a tweet
+      tags:
+      - Comments
+  /user/tweet/comment/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a comment from a tweet
+      parameters:
+      - description: Comment deletion request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_internal_models_tweet-handler.DeleteCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Delete a comment
+      tags:
+      - Comments
+  /user/tweet/comment/like/{comment_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the likes for a specific comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: comment_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_like.GetLikesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get likes for a comment
+      tags:
+      - Likes
+    post:
+      consumes:
+      - application/json
+      description: Adds a like to a comment for the authenticated user
+      parameters:
+      - description: Comment ID
+        in: path
+        name: comment_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Like a comment
+      tags:
+      - Likes
+  /user/tweet/comment/like/{comment_id}/unlike:
+    post:
+      consumes:
+      - application/json
+      description: Removes a like from a comment for the authenticated user
+      parameters:
+      - description: Comment ID
+        in: path
+        name: comment_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Unlike a comment
+      tags:
+      - Likes
+  /user/tweet/like/{tweet_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the likes for a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: tweet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_like.GetLikesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get likes for a tweet
+      tags:
+      - Likes
+    post:
+      consumes:
+      - application/json
+      description: Adds a like to a tweet for the authenticated user
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: tweet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Like a tweet
+      tags:
+      - Likes
+  /user/tweet/like/{tweet_id}/unlike:
+    post:
+      consumes:
+      - application/json
+      description: Removes a like from a tweet for the authenticated user
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: tweet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Unlike a tweet
+      tags:
+      - Likes
+  /user/tweet/reposts:
+    post:
+      consumes:
+      - application/json
+      description: Increase the repost count for a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Id'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Increase repost count for a tweet
+      tags:
+      - Tweets
+  /user/tweet/shares:
+    post:
+      consumes:
+      - application/json
+      description: Increase the shares count for a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Id'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Increase shares count for a tweet
+      tags:
+      - Tweets
+  /user/tweet/views:
+    post:
+      consumes:
+      - application/json
+      description: Increase the views count for a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abdulazizax_mini-twitter_api-service_genproto_tweet.Id'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Increase views count for a tweet
+      tags:
+      - Tweets
+  /user/unfollow/{user_id}:
+    post:
+      consumes:
+      - application/json
+      description: Unfollow a user by their user ID
+      parameters:
+      - description: User ID to unfollow
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Unfollow a user
+      tags:
+      - Users
+  /user/uploadmedia:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a media file
+      parameters:
+      - description: UploadMediaForm
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema: {}
+      security:
+      - BearerAuth: []
+      summary: uploadFile
+      tags:
+      - Users
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,8 @@
+p, superadmin, /superadmin, *
+
+p, admin, /admin, *
+
+p, user, /user, *
+
+g, admin, superadmin
+g, user, admin

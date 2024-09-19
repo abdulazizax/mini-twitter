@@ -1,0 +1,4 @@
+{"time":"2024-09-19T22:06:42.932417494+05:00","level":"INFO","msg":"Successfully created topics","topics":["user.registered","user.updated","user.deleted","user.password.updated","user.followed","user.unfollowed","user.tweet.created","user.tweet.updated","user.tweet.deleted","user.tweet.views.increased","user.tweet.repost.increased","user.tweet.shares.increased","user.tweet.comment.created","user.tweet.comment.deleted","user.tweet.like","user.tweet.unlike","user.tweet.comment.like","user.tweet.comment.unlike"],"count":18}
+{"time":"2024-09-19T22:06:57.044289837+05:00","level":"INFO","msg":"Bucket already exists","bucket":"photos"}
+{"time":"2024-09-19T22:06:57.054123086+05:00","level":"INFO","msg":"File uploaded successfully","bucket":"photos","file":"c8f9dcad-6d4a-4117-8ea8-bedf8b0ba1c3.jpg"}
+{"time":"2024-09-19T22:06:57.054157674+05:00","level":"INFO","msg":"File URL created","url":"http://localhost:9000/photos/c8f9dcad-6d4a-4117-8ea8-bedf8b0ba1c3.jpg"}

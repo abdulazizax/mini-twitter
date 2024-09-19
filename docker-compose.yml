@@ -1,0 +1,171 @@
+version: '3.9'
+
+services:
+  postgres-db:
+    container_name: postgres
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=twitter
+    ports:
+      - "5433:5432"
+    volumes:
+      - db:/var/lib/postgresql/data 
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  migrate:
+    image: migrate/migrate
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://postgres:pass@postgres:5432/twitter?sslmode=disable",
+      "up"
+    ]
+    volumes:
+      - ./user-service/migrations:/migrations
+    networks:
+      - mini_twitter
+    depends_on:
+      - postgres-db
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6378:6379"
+    volumes:
+      - redis_volume_data:/data
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - "2182:2181"
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD", "echo", "ruok | nc 127.0.0.1 2181 | grep imok"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    ports:
+      - "9093:9092"
+    depends_on:
+      - zookeeper
+    networks:
+      - mini_twitter
+
+  minio:
+    container_name: minio
+    image: minio/minio
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadminpass
+    command: server /data
+    ports:
+      - "9001:9000"
+    volumes:
+      - minio_data:/data
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD", "curl -f http://localhost:9001/minio/health/live || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  user:
+    container_name: user
+    build: ./user-service
+    depends_on:
+      - postgres-db
+      - redis
+      - migrate
+      - kafka
+      - minio
+    ports:
+      - "8081:8081"
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  tweet:
+    container_name: tweet
+    build: ./tweet-service
+    depends_on:
+      - postgres-db
+      - redis
+      - migrate
+      - kafka
+    ports:
+      - "8082:8082"
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  gateway:
+    container_name: gateway
+    build: ./api-service
+    depends_on:
+      - user
+      - tweet
+      - postgres-db
+      - redis
+      - migrate
+      - kafka
+    ports:
+      - "8080:8080"
+    networks:
+      - mini_twitter
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+networks:
+  mini_twitter:
+    external: true
+    name: mini_twitter
+
+volumes:
+  db:
+  redis_volume_data:
+  minio_data:

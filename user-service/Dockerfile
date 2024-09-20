@@ -3,34 +3,36 @@ FROM golang:1.23.1 AS builder
 
 WORKDIR /app
 
-# Go proxy ni o'rnatish
-ENV GOPROXY=direct
+# Copy and download dependencies
+COPY go.mod .
+COPY go.sum .
 
-# Loyihaning qolgan qismini nusxalash
+# Copy the rest of the application
 COPY . .
-
-# Go modulyatsiya fayllarini yuklash
 RUN go mod download
 
-# Agar kerak bo'lsa, .env faylini nusxalash
+# Optionally copy the .env file if it's needed
 COPY .env .
 
-# Dastur build qilish
-RUN CGO_ENABLED=0 GOOS=linux go build -o myapp ./cmd
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -C ./cmd -a -installsuffix cgo -o ./../myapp .
 
 # Stage 2: Final stage
 FROM alpine:latest
 
 WORKDIR /app
 
-# Birinchi bosqichdan (builder) compiled binary faylini nusxalash
+# Copy the compiled binary from the builder stage
 COPY --from=builder /app/myapp .
+# Copy the configuration files
+# COPY --from=builder /app/internal/casbin/rbac_model.conf ./internal/casbin/
+# COPY --from=builder /app/internal/casbin/policy.csv ./internal/casbin/
 
-# Agar kerak bo'lsa, .env faylini nusxalash
+# Optionally copy the .env file if it's needed
 COPY --from=builder /app/.env .
 
-# Port 8081 ni expose qilish
+# Expose port 8081
 EXPOSE 8081
 
-# Dastur executable faylini ishga tushirish
+# Command to run the executable
 CMD ["./myapp"]

@@ -5,23 +5,24 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/IBM/sarama"
 	"github.com/abdulazizax/mini-twitter/api-service/internal/pkg/config"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 // Producer structure
 type Producer struct {
-	producer *kafka.Producer
+	producer sarama.SyncProducer
 	logger   *slog.Logger
 	config   *config.Config
 }
 
 // NewProducer creates a new producer
 func NewProducer(config *config.Config, logger *slog.Logger) (*Producer, error) {
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": config.Kafka.Brokers,
-		"acks":              "all", // Ensure all in-sync replicas acknowledge the write
-	})
+	saramaConfig := sarama.NewConfig()
+	saramaConfig.Producer.Return.Successes = true
+	saramaConfig.Producer.RequiredAcks = sarama.WaitForAll // Ensure all in-sync replicas acknowledge the write
+
+	producer, err := sarama.NewSyncProducer([]string{config.Kafka.Brokers}, saramaConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -35,67 +36,62 @@ func NewProducer(config *config.Config, logger *slog.Logger) (*Producer, error) 
 
 // Send sends a message to a Kafka topic
 func (p *Producer) Send(topic string, value []byte) error {
-	msg := &kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          value,
+	msg := &sarama.ProducerMessage{
+		Topic: topic,
+		Value: sarama.ByteEncoder(value),
 	}
 
-	// Produce the message asynchronously
-	err := p.producer.Produce(msg, nil)
+	// Produce the message
+	partition, offset, err := p.producer.SendMessage(msg)
 	if err != nil {
 		p.logger.Error("Error producing message", "error", err.Error())
 		return err
 	}
 
-	// Wait for the delivery report
-	ev := <-p.producer.Events()
-	switch e := ev.(type) {
-	case *kafka.Message:
-		if e.TopicPartition.Error != nil {
-			p.logger.Error("Failed to deliver message", "topic", *e.TopicPartition.Topic, "error", e.TopicPartition.Error.Error())
-			return e.TopicPartition.Error
-		}
-		p.logger.Info("Message delivered", "topic", *e.TopicPartition.Topic, "partition", e.TopicPartition.Partition)
-	default:
-		p.logger.Warn("Received unsupported event type", "event", ev)
-	}
-
-	// Optionally, flush all messages after producing
-	p.producer.Flush(15 * 1000) // 15 seconds
+	p.logger.Info("Message delivered", "topic", topic, "partition", partition, "offset", offset)
 	return nil
 }
 
 // Close closes the producer
 func (p *Producer) Close() {
-	p.producer.Close()
+	if err := p.producer.Close(); err != nil {
+		p.logger.Error("Error closing producer", "error", err.Error())
+	}
 }
 
 // CreateTopics creates multiple Kafka topics
 func (p *Producer) CreateTopics(topics []string, numPartitions int, replicationFactor int) error {
-	adminClient, err := kafka.NewAdminClient(&kafka.ConfigMap{
-		"bootstrap.servers": p.config.Kafka.Brokers,
-	})
+	adminClient, err := sarama.NewClusterAdmin([]string{p.config.Kafka.Brokers}, sarama.NewConfig())
 	if err != nil {
 		return err
 	}
 	defer adminClient.Close()
 
-	var topicConfigs []kafka.TopicSpecification
-	for _, topic := range topics {
-		topicConfigs = append(topicConfigs, kafka.TopicSpecification{
-			Topic:             topic,
-			NumPartitions:     numPartitions,
-			ReplicationFactor: replicationFactor,
-		})
+	topicDetails := &sarama.TopicDetail{
+		NumPartitions:     int32(numPartitions),
+		ReplicationFactor: int16(replicationFactor),
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	_, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	_, err = adminClient.CreateTopics(ctx, topicConfigs)
-	if err != nil {
-		p.logger.Error("Error creating topics", "error", err.Error())
-		return err
+	for _, topic := range topics {
+		// Check if topic exists
+		topics, err := adminClient.ListTopics()
+		if err != nil {
+			p.logger.Error("Error listing topics", "error", err.Error())
+			return err
+		}
+		if _, exists := topics[topic]; exists {
+			p.logger.Warn("Topic already exists", "topic", topic)
+			continue // If the topic exists, continue to the next one
+		}
+
+		// Create the topic
+		if err := adminClient.CreateTopic(topic, topicDetails, false); err != nil {
+			p.logger.Error("Error creating topic", "topic", topic, "error", err.Error())
+			return err
+		}
 	}
 
 	p.logger.Info("Successfully created topics", "topics", topics, "count", len(topics))

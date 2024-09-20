@@ -68,7 +68,7 @@ func Run(config *config.Config, logger *slog.Logger) error {
 			logger.Error("Error creating "+consumer.topic+" consumer", slog.String("err", err.Error()))
 			continue
 		}
-		go c.Start(context.Background())
+		go c.Start(context.Background(), consumer.topic)
 	}
 
 	// Set up the gRPC server

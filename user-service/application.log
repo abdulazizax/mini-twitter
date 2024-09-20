@@ -1,17 +1,1 @@
-{"time":"2024-09-20T02:07:54.921153727+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.registered: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.939686987+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.deleted: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.93990614+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.updated: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.951884584+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.followed: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.953258252+05:00","level":"ERROR","msg":"Error while consuming message","error":"GroupCoordinator: abdulaziz-ax:9092: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 2ms in state CONNECT)"}
-{"time":"2024-09-20T02:07:54.956905951+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.unfollowed: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.959218743+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8081"}
-{"time":"2024-09-20T02:07:54.965686077+05:00","level":"ERROR","msg":"Error while consuming message","error":"GroupCoordinator: abdulaziz-ax:9092: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 6ms in state CONNECT)"}
-{"time":"2024-09-20T02:07:54.966266371+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.verifycode.sended: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:07:54.98237485+05:00","level":"ERROR","msg":"Error while consuming message","error":"Subscribed topic not available: user.password.updated: Broker: Unknown topic or partition"}
-{"time":"2024-09-20T02:08:11.104814161+05:00","level":"ERROR","msg":"Error while consuming message","error":"abdulaziz-ax:9092/0: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 4ms in state CONNECT)"}
-{"time":"2024-09-20T02:08:11.105673677+05:00","level":"ERROR","msg":"Error while consuming message","error":"abdulaziz-ax:9092/0: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 5ms in state CONNECT)"}
-{"time":"2024-09-20T02:08:11.10647337+05:00","level":"ERROR","msg":"Error while consuming message","error":"abdulaziz-ax:9092/0: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 6ms in state CONNECT)"}
-{"time":"2024-09-20T02:08:11.107247564+05:00","level":"ERROR","msg":"Error while consuming message","error":"abdulaziz-ax:9092/0: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 6ms in state CONNECT)"}
-{"time":"2024-09-20T02:08:11.107990832+05:00","level":"ERROR","msg":"Error while consuming message","error":"abdulaziz-ax:9092/0: Failed to connect to broker at [abdulaziz-ax]:9092: Invalid argument (after 7ms in state CONNECT)"}
-{"time":"2024-09-20T02:08:39.466475823+05:00","level":"INFO","msg":"Login function was invoked","request":"email:\"abdulazizax2001@gmail.com\" password:\"pass\""}
-{"time":"2024-09-20T02:09:07.160284568+05:00","level":"INFO","msg":"GetUser function was invoked","request":"user_id:\"9eedc698-8bdd-4c07-be33-6346050d5948\""}
+{"time":"2024-09-20T17:18:11.122819893+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8081"}

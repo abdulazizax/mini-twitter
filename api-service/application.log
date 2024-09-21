@@ -1,26 +1,32 @@
-{"time":"2024-09-20T17:18:17.201868404+05:00","level":"WARN","msg":"Topic already exists","topic":"user.registered"}
-{"time":"2024-09-20T17:18:17.229205842+05:00","level":"WARN","msg":"Topic already exists","topic":"user.updated"}
-{"time":"2024-09-20T17:18:17.254805747+05:00","level":"WARN","msg":"Topic already exists","topic":"user.deleted"}
-{"time":"2024-09-20T17:18:17.275554593+05:00","level":"WARN","msg":"Topic already exists","topic":"user.password.updated"}
-{"time":"2024-09-20T17:18:17.296710809+05:00","level":"WARN","msg":"Topic already exists","topic":"user.followed"}
-{"time":"2024-09-20T17:18:17.317225414+05:00","level":"WARN","msg":"Topic already exists","topic":"user.unfollowed"}
-{"time":"2024-09-20T17:18:17.338321588+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.created"}
-{"time":"2024-09-20T17:18:17.357214799+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.updated"}
-{"time":"2024-09-20T17:18:17.375992186+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.deleted"}
-{"time":"2024-09-20T17:18:17.396979915+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.views.increased"}
-{"time":"2024-09-20T17:18:17.413171015+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.repost.increased"}
-{"time":"2024-09-20T17:18:17.426268091+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.shares.increased"}
-{"time":"2024-09-20T17:18:17.436042948+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.created"}
-{"time":"2024-09-20T17:18:17.447424596+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.deleted"}
-{"time":"2024-09-20T17:18:17.456745629+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.like"}
-{"time":"2024-09-20T17:18:17.464839718+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.unlike"}
-{"time":"2024-09-20T17:18:17.475684174+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.like"}
-{"time":"2024-09-20T17:18:17.484531839+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.unlike"}
-{"time":"2024-09-20T17:18:17.484583646+05:00","level":"INFO","msg":"Successfully created topics","topics":["user.registered","user.updated","user.deleted","user.password.updated","user.followed","user.unfollowed","user.tweet.created","user.tweet.updated","user.tweet.deleted","user.tweet.views.increased","user.tweet.repost.increased","user.tweet.shares.increased","user.tweet.comment.created","user.tweet.comment.deleted","user.tweet.like","user.tweet.unlike","user.tweet.comment.like","user.tweet.comment.unlike"],"count":18}
-{"time":"2024-09-20T17:18:27.957045958+05:00","level":"INFO","msg":"GetAllTweets called"}
-{"time":"2024-09-20T17:18:27.961047398+05:00","level":"INFO","msg":"All tweets retrieved successfully","username":"abdulazizax"}
-{"time":"2024-09-20T17:18:49.730707245+05:00","level":"INFO","msg":"CreateTweetHandler called"}
-{"time":"2024-09-20T17:18:49.738526966+05:00","level":"INFO","msg":"Message delivered","topic":"user.tweet.created","partition":0,"offset":5}
-{"time":"2024-09-20T17:18:49.738594949+05:00","level":"INFO","msg":"Tweet created successfully","username":"abdulazizax"}
-{"time":"2024-09-20T17:18:57.550570273+05:00","level":"INFO","msg":"GetAllTweets called"}
-{"time":"2024-09-20T17:18:57.551686043+05:00","level":"INFO","msg":"All tweets retrieved successfully","username":"abdulazizax"}
+{"time":"2024-09-21T00:29:39.583791981+05:00","level":"WARN","msg":"Topic already exists","topic":"user.registered"}
+{"time":"2024-09-21T00:29:39.634291878+05:00","level":"WARN","msg":"Topic already exists","topic":"user.updated"}
+{"time":"2024-09-21T00:29:39.684436164+05:00","level":"WARN","msg":"Topic already exists","topic":"user.deleted"}
+{"time":"2024-09-21T00:29:39.721028942+05:00","level":"WARN","msg":"Topic already exists","topic":"user.password.updated"}
+{"time":"2024-09-21T00:29:39.751713139+05:00","level":"WARN","msg":"Topic already exists","topic":"user.followed"}
+{"time":"2024-09-21T00:29:39.790027088+05:00","level":"WARN","msg":"Topic already exists","topic":"user.unfollowed"}
+{"time":"2024-09-21T00:29:39.815008526+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.created"}
+{"time":"2024-09-21T00:29:39.840888181+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.updated"}
+{"time":"2024-09-21T00:29:39.863188277+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.deleted"}
+{"time":"2024-09-21T00:29:39.883174962+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.views.increased"}
+{"time":"2024-09-21T00:29:39.898866688+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.repost.increased"}
+{"time":"2024-09-21T00:29:39.919036163+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.shares.increased"}
+{"time":"2024-09-21T00:29:39.939355281+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.created"}
+{"time":"2024-09-21T00:29:39.957712635+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.deleted"}
+{"time":"2024-09-21T00:29:39.977557365+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.like"}
+{"time":"2024-09-21T00:29:39.993828507+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.unlike"}
+{"time":"2024-09-21T00:29:40.011219656+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.like"}
+{"time":"2024-09-21T00:29:40.032995103+05:00","level":"WARN","msg":"Topic already exists","topic":"user.tweet.comment.unlike"}
+{"time":"2024-09-21T00:29:40.033030782+05:00","level":"INFO","msg":"Successfully created topics","topics":["user.registered","user.updated","user.deleted","user.password.updated","user.followed","user.unfollowed","user.tweet.created","user.tweet.updated","user.tweet.deleted","user.tweet.views.increased","user.tweet.repost.increased","user.tweet.shares.increased","user.tweet.comment.created","user.tweet.comment.deleted","user.tweet.like","user.tweet.unlike","user.tweet.comment.like","user.tweet.comment.unlike"],"count":18}
+{"time":"2024-09-21T00:30:01.459186666+05:00","level":"INFO","msg":"GetAllTweets called"}
+{"time":"2024-09-21T00:30:01.476819146+05:00","level":"INFO","msg":"All tweets retrieved successfully","username":"aax"}
+{"time":"2024-09-21T00:30:36.541706093+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-09-21T00:30:36.551331003+05:00","level":"ERROR","msg":"Failed to login","error":"rpc error: code = Unknown desc = failed to execute query: sql: no rows in result set"}
+{"time":"2024-09-21T00:30:57.565752812+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-09-21T00:30:57.666097954+05:00","level":"INFO","msg":"User logged in successfully","email":"abdulazizax2001@gmail.com"}
+{"time":"2024-09-21T00:31:27.466132929+05:00","level":"INFO","msg":"GetAllTweets called"}
+{"time":"2024-09-21T00:31:27.467686303+05:00","level":"INFO","msg":"All tweets retrieved successfully","username":"abdulazizax"}
+{"time":"2024-09-21T00:31:49.219968257+05:00","level":"INFO","msg":"CreateTweetHandler called"}
+{"time":"2024-09-21T00:31:49.25722909+05:00","level":"INFO","msg":"Message delivered","topic":"user.tweet.created","partition":0,"offset":0}
+{"time":"2024-09-21T00:31:49.257275005+05:00","level":"INFO","msg":"Tweet created successfully","username":"abdulazizax"}
+{"time":"2024-09-21T00:31:56.329762305+05:00","level":"INFO","msg":"GetAllTweets called"}
+{"time":"2024-09-21T00:31:56.330802447+05:00","level":"INFO","msg":"All tweets retrieved successfully","username":"abdulazizax"}

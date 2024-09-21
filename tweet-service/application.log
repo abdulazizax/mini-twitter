@@ -1,1 +1,6 @@
-{"time":"2024-09-20T17:25:37.000410444+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8082"}
+{"time":"2024-09-21T00:29:31.459813114+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8082"}
+{"time":"2024-09-21T00:30:01.460876654+05:00","level":"INFO","msg":"Getting all tweets","username":"aax"}
+{"time":"2024-09-21T00:31:27.466572624+05:00","level":"INFO","msg":"Getting all tweets","username":"abdulazizax"}
+{"time":"2024-09-21T00:31:49.263120011+05:00","level":"INFO","msg":"Creating tweet","username":"abdulazizax"}
+{"time":"2024-09-21T00:31:49.268889965+05:00","level":"INFO","msg":"Successfully processed message","topic":"user.tweet.created"}
+{"time":"2024-09-21T00:31:56.330045856+05:00","level":"INFO","msg":"Getting all tweets","username":"abdulazizax"}

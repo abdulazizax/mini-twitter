@@ -1,1 +1,4 @@
-{"time":"2024-09-20T17:18:11.122819893+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8081"}
+{"time":"2024-09-21T00:29:34.721815759+05:00","level":"INFO","msg":"Server has started running","port":"localhost:8081"}
+{"time":"2024-09-21T00:30:36.543517524+05:00","level":"INFO","msg":"Login function was invoked","request":"email:\"abdulazizax@gmail.com\" password:\"pass\""}
+{"time":"2024-09-21T00:30:36.550875036+05:00","level":"ERROR","msg":"Failed to execute query","error":"sql: no rows in result set"}
+{"time":"2024-09-21T00:30:57.566166878+05:00","level":"INFO","msg":"Login function was invoked","request":"email:\"abdulazizax2001@gmail.com\" password:\"pass\""}
